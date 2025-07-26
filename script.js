@@ -3,19 +3,21 @@ document.addEventListener('DOMContentLoaded', function() {
     const hamburger = document.querySelector('.hamburger');
     const navMenu = document.querySelector('.nav-menu');
 
-    hamburger.addEventListener('click', function() {
-        hamburger.classList.toggle('active');
-        navMenu.classList.toggle('active');
-    });
+    if (hamburger && navMenu) {
+        hamburger.addEventListener('click', function() {
+            hamburger.classList.toggle('active');
+            navMenu.classList.toggle('active');
+        });
 
-    // Close mobile menu when clicking on a link
-    document.querySelectorAll('.nav-link').forEach(n => n.addEventListener('click', () => {
-        hamburger.classList.remove('active');
-        navMenu.classList.remove('active');
-    }));
+        // Close mobile menu when clicking on a link
+        document.querySelectorAll('.nav-link').forEach(n => n.addEventListener('click', () => {
+            hamburger.classList.remove('active');
+            navMenu.classList.remove('active');
+        }));
+    }
 });
 
-// Smooth scrolling for navigation links
+// Smooth scrolling for anchor links (within same page)
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
         e.preventDefault();
@@ -32,52 +34,118 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 // Navbar background change on scroll
 window.addEventListener('scroll', function() {
     const navbar = document.querySelector('.navbar');
-    if (window.scrollY > 100) {
-        navbar.style.background = 'rgba(255, 255, 255, 0.98)';
-        navbar.style.boxShadow = '0 2px 20px rgba(0, 0, 0, 0.15)';
-    } else {
-        navbar.style.background = 'rgba(255, 255, 255, 0.95)';
-        navbar.style.boxShadow = '0 2px 20px rgba(0, 0, 0, 0.1)';
+    if (navbar) {
+        if (window.scrollY > 100) {
+            navbar.style.background = 'rgba(255, 255, 255, 0.98)';
+            navbar.style.boxShadow = '0 2px 20px rgba(0, 0, 0, 0.15)';
+        } else {
+            navbar.style.background = 'rgba(255, 255, 255, 0.95)';
+            navbar.style.boxShadow = '0 2px 20px rgba(0, 0, 0, 0.1)';
+        }
     }
 });
 
 // Form submission handler
-document.querySelector('.contact-form form').addEventListener('submit', function(e) {
-    e.preventDefault();
-    
-    // Get form data
-    const formData = new FormData(this);
-    const name = this.querySelector('input[type="text"]').value;
-    const email = this.querySelector('input[type="email"]').value;
-    const subject = this.querySelector('input[type="text"]:nth-of-type(2)').value;
-    const message = this.querySelector('textarea').value;
-    
-    // Simple validation
-    if (!name || !email || !subject || !message) {
-        alert('Please fill in all fields.');
-        return;
-    }
-    
-    // Email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-        alert('Please enter a valid email address.');
-        return;
-    }
-    
-    // Simulate form submission
-    const submitBtn = this.querySelector('.btn-primary');
-    const originalText = submitBtn.textContent;
-    submitBtn.textContent = 'Sending...';
-    submitBtn.disabled = true;
-    
-    // Simulate network delay
-    setTimeout(() => {
-        alert('Thank you for your message! I will get back to you soon.');
-        this.reset();
-        submitBtn.textContent = originalText;
-        submitBtn.disabled = false;
-    }, 2000);
+const contactForm = document.querySelector('.contact-form form, #contactForm');
+if (contactForm) {
+    contactForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Get form inputs
+        const inputs = this.querySelectorAll('input, textarea, select');
+        let isValid = true;
+        
+        // Basic validation
+        inputs.forEach(input => {
+            if (input.hasAttribute('required') && !input.value.trim()) {
+                isValid = false;
+                input.style.borderColor = '#ff6b6b';
+            } else {
+                input.style.borderColor = '';
+            }
+        });
+        
+        // Email validation
+        const emailInput = this.querySelector('input[type="email"]');
+        if (emailInput && emailInput.value) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(emailInput.value)) {
+                isValid = false;
+                emailInput.style.borderColor = '#ff6b6b';
+                alert('Please enter a valid email address.');
+                return;
+            }
+        }
+        
+        if (!isValid) {
+            alert('Please fill in all required fields.');
+            return;
+        }
+        
+        // Simulate form submission
+        const submitBtn = this.querySelector('.btn-primary, button[type="submit"]');
+        const originalText = submitBtn.textContent;
+        submitBtn.textContent = 'Sending...';
+        submitBtn.disabled = true;
+        
+        // Simulate network delay
+        setTimeout(() => {
+            alert('Thank you for your message! I will get back to you soon.');
+            this.reset();
+            submitBtn.textContent = originalText;
+            submitBtn.disabled = false;
+        }, 2000);
+    });
+}
+
+// Portfolio Filter Functionality
+const filterButtons = document.querySelectorAll('.filter-btn');
+const portfolioItems = document.querySelectorAll('.portfolio-item');
+
+if (filterButtons.length > 0 && portfolioItems.length > 0) {
+    filterButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            // Remove active class from all buttons
+            filterButtons.forEach(btn => btn.classList.remove('active'));
+            // Add active class to clicked button
+            this.classList.add('active');
+            
+            const filter = this.getAttribute('data-filter');
+            
+            portfolioItems.forEach(item => {
+                if (filter === 'all' || item.getAttribute('data-category').includes(filter)) {
+                    item.style.display = 'block';
+                    setTimeout(() => {
+                        item.style.opacity = '1';
+                        item.style.transform = 'scale(1)';
+                    }, 10);
+                } else {
+                    item.style.opacity = '0';
+                    item.style.transform = 'scale(0.8)';
+                    setTimeout(() => {
+                        item.style.display = 'none';
+                    }, 300);
+                }
+            });
+        });
+    });
+}
+
+// FAQ Accordion
+const faqItems = document.querySelectorAll('.faq-item');
+faqItems.forEach(item => {
+    const question = item.querySelector('.faq-question');
+    question.addEventListener('click', function() {
+        // Close other open items
+        faqItems.forEach(otherItem => {
+            if (otherItem !== item) {
+                otherItem.classList.remove('active');
+            }
+        });
+        
+        // Toggle current item
+        item.classList.toggle('active');
+    });
 });
 
 // Add fade-in animation on scroll
@@ -96,7 +164,7 @@ const observer = new IntersectionObserver(function(entries) {
 
 // Add fade-in class to elements and observe them
 document.addEventListener('DOMContentLoaded', function() {
-    const elementsToAnimate = document.querySelectorAll('.service-card, .portfolio-item, .stat-item, .about-text, .contact-info, .contact-form');
+    const elementsToAnimate = document.querySelectorAll('.service-card, .portfolio-item, .stat-item, .about-text, .contact-info, .contact-form, .education-item, .process-step, .pricing-card, .testimonial-item, .timeline-item');
     
     elementsToAnimate.forEach(el => {
         el.classList.add('fade-in');
@@ -104,29 +172,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-// Add active state to navigation links based on scroll position
-window.addEventListener('scroll', function() {
-    const sections = document.querySelectorAll('section[id]');
-    const navLinks = document.querySelectorAll('.nav-link');
-    
-    let current = '';
-    sections.forEach(section => {
-        const sectionTop = section.offsetTop;
-        const sectionHeight = section.clientHeight;
-        if (scrollY >= (sectionTop - 200)) {
-            current = section.getAttribute('id');
-        }
-    });
-
-    navLinks.forEach(link => {
-        link.classList.remove('active');
-        if (link.getAttribute('href') === `#${current}`) {
-            link.classList.add('active');
-        }
-    });
-});
-
-// Add typing effect to hero title
+// Add typing effect to hero title (only on home page)
 function typeWriter(element, text, speed = 100) {
     element.innerHTML = '';
     let i = 0;
@@ -142,7 +188,7 @@ function typeWriter(element, text, speed = 100) {
     type();
 }
 
-// Initialize typing effect when page loads
+// Initialize typing effect when page loads (only on home page)
 document.addEventListener('DOMContentLoaded', function() {
     const heroTitle = document.querySelector('.hero-text h1');
     if (heroTitle) {
@@ -164,7 +210,7 @@ document.querySelectorAll('.service-card').forEach(card => {
     });
 });
 
-// Add parallax effect to hero section
+// Add parallax effect to hero section (only on home page)
 window.addEventListener('scroll', function() {
     const scrolled = window.pageYOffset;
     const heroSection = document.querySelector('.hero');
@@ -210,4 +256,15 @@ document.addEventListener('DOMContentLoaded', function() {
     if (aboutStats) {
         statsObserver.observe(aboutStats);
     }
+    
+    // Set active navigation link based on current page
+    const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+    const navLinks = document.querySelectorAll('.nav-link');
+    
+    navLinks.forEach(link => {
+        const href = link.getAttribute('href');
+        if (href === currentPage || (currentPage === '' && href === 'index.html')) {
+            link.classList.add('active');
+        }
+    });
 });

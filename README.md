@@ -4,17 +4,28 @@ A modern, responsive portfolio website for marketing professional Nguyen Thi Hop
 
 ## 🌟 Features
 
+- **Multi-Page Structure**: Professional website with dedicated pages for different sections
 - **Responsive Design**: Fully responsive layout that works on all devices
 - **Modern UI/UX**: Clean, professional design with smooth animations
-- **Interactive Elements**: Hover effects, smooth scrolling, and dynamic content
+- **Interactive Elements**: Hover effects, portfolio filtering, FAQ accordions, and dynamic content
 - **Professional Sections**:
-  - Hero section with professional introduction
-  - About section with skills and statistics
-  - Services offered
-  - Portfolio showcase
-  - Contact form and information
+  - **Home**: Hero section with professional introduction
+  - **About**: Detailed background, experience timeline, education, and skills
+  - **Services**: Comprehensive service offerings with process overview and pricing
+  - **Portfolio**: Filterable project showcase with case studies and testimonials
+  - **Contact**: Contact form, FAQ section, and contact information
 - **SEO Optimized**: Proper meta tags and semantic HTML structure
 - **Performance Optimized**: Lightweight and fast-loading
+
+## 🌐 Website Structure
+
+The website consists of five main pages:
+
+1. **index.html** - Home page with hero section and introduction
+2. **about.html** - Professional background, experience, and education
+3. **services.html** - Service offerings, process, and pricing packages
+4. **portfolio.html** - Project portfolio with filtering and testimonials
+5. **contact.html** - Contact form, information, and FAQ section
 
 ## 🚀 Live Demo
 
@@ -24,9 +35,14 @@ Visit the live website at: `https://nguyenthihoply.github.io/profile`
 
 ```
 profile/
-├── index.html          # Main HTML file
+├── index.html          # Home page with hero section
+├── about.html          # About page with experience and education
+├── services.html       # Services page with offerings and pricing
+├── portfolio.html      # Portfolio page with projects and testimonials
+├── contact.html        # Contact page with form and FAQ
+├── favicon.svg         # Website favicon (marketing megaphone icon)
 ├── styles.css          # CSS styles and responsive design
-├── script.js           # JavaScript functionality
+├── script.js           # JavaScript functionality and animations
 └── README.md          # Project documentation
 ```
 
